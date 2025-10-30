@@ -1,8 +1,8 @@
-# Retrieve Operation
+from myapp.models import Book
 
-```python
-from bookshelf.models import Book
+# Retrieve the book with title "1984"
+book = Book.objects.get(title="1984")
+book
 
-# Retrieve all Book instances as dictionaries
-books = Book.objects.all().values()
-books
+# Expected output: 1984 George Orwell 1949
+
