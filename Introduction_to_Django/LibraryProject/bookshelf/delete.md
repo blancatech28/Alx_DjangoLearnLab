@@ -1,5 +1,8 @@
-from myapp.models import Book  # Import the model
+from bookshelf.models import Book
 
-Book.objects.get(title="Nineteen Eighty-Four").delete()  # Deletes the book
+book = Book.objects.get(title="Nineteen Eighty-Four")
+
+# Delete the book
+book.delete()
 
 Book.objects.all()  # Expected output: <QuerySet []>
