@@ -4,6 +4,10 @@ from django.views import View
 from django.views.generic.detail import DetailView   # ✅ required import
 from .models import Author, Book, Library, Librarian
 from .models import Library  # ✅ required by checker
+from django.views.generic.edit import CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+
 
 
 def list_books(request):
@@ -21,3 +25,10 @@ class LibraryDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['librarian'] = Librarian.objects.get(library=self.object)
         return context
+
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'relationship_app/register.html'
+    success_url = reverse_lazy('login') 
+
+
