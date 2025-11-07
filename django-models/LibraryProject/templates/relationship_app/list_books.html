@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        ul {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0;
+            list-style: none;
+        }
+        li {
+            background: #fff;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .empty {
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 List of All Books</h1>
+
+    <ul>
+        {% for book in books %}
+            <li><strong>{{ book.title }}</strong> — by {{ book.author.name }}</li>
+        {% empty %}
+            <p class="empty">No books found in the library.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>
