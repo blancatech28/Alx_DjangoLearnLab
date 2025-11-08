@@ -4,7 +4,6 @@ from django.views import View
 from django.views.generic.detail import DetailView   # ✅ required import
 from .models import Author, Book, Library, Librarian
 from .models import Library  # ✅ required by checker
-from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
@@ -26,9 +25,47 @@ class LibraryDetailView(DetailView):
         context['librarian'] = Librarian.objects.get(library=self.object)
         return context
 
-class RegisterView(CreateView):
-    form_class = UserCreationForm
-    template_name = 'relationship_app/register.html'
-    success_url = reverse_lazy('login') 
+# relationship_app/views.py
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+
+# Registration view
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # auto-login after registration
+            messages.success(request, 'Account created and logged in successfully!')
+            return redirect('home')  # change 'home' to any view you want
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
+
+# Login view
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Welcome, {username}!')
+                return redirect('home')  # change 'home' to any view you want
+        messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'relationship_app/login.html', {'form': form})
+
+# Logout view
+def logout_view(request):
+    logout(request)
+    messages.info(request, 'You have been logged out.')
+    return render(request, 'relationship_app/logout.html')
 
 
