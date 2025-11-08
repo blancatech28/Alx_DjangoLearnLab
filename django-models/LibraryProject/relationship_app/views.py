@@ -12,9 +12,11 @@ from .models import Author, Book, Library, Librarian
 from .models import Library  # ✅ required by checker
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required
+
 
 
 
@@ -34,10 +36,7 @@ class LibraryDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['librarian'] = Librarian.objects.get(library=self.object)
         return context
-
-# relationship_app/views.py
-
-
+    
 
 # Registration view
 def register(request):
@@ -74,6 +73,7 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'You have been logged out.')
     return render(request, 'relationship_app/logout.html')
+
 
 
 
@@ -119,5 +119,51 @@ def member_view(request):
         'books': books,
     }
     return render(request, 'relationship_app/member_view.html', context)
+
+
+@permission_required('relationship_app.can_add_book', login_url=reverse_lazy('login'))
+def add_book(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        if title and author:
+            Book.objects.create(title=title, author=author)
+            return redirect('list_books')
+    return render(request, 'relationship_app/book_form.html')
+
+
+from django.shortcuts import get_object_or_404
+
+@permission_required('relationship_app.can_change_book', login_url=reverse_lazy('login'))
+def edit_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        if title and author:
+            book.title = title
+            book.author = author
+            book.save()
+            return redirect('list_books')
+    context = {'book': book}
+    return render(request, 'relationship_app/book_form.html', context)
+
+@permission_required('relationship_app.can_delete_book', login_url=reverse_lazy('login'))
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('list_books')
+    context = {'book': book}
+    return render(request, 'relationship_app/book_confirm_delete.html', context)
+
+
+
+ 
+
+
+
+
+
 
 
