@@ -7,11 +7,15 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic.detail import DetailView   # ✅ required import
+from django.views.generic.detail import DetailView   
 from .models import Author, Book, Library, Librarian
 from .models import Library  # ✅ required by checker
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse
+
 
 
 
@@ -70,5 +74,50 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'You have been logged out.')
     return render(request, 'relationship_app/logout.html')
+
+
+
+# Helper functions to check user roles
+def is_admin(user):
+    return user.userprofile.role == 'Admin'
+
+
+def is_librarian(user):
+    return user.userprofile.role == 'Librarian'
+
+
+def is_member(user):
+    return user.userprofile.role == 'Member'
+
+
+# Admin View
+@user_passes_test(is_admin)
+def admin_view(request):
+    context = {
+        'message': 'Welcome Admin! You have full access to the system.',
+    }
+    return render(request, 'relationship_app/admin_view.html', context)
+
+
+# Librarian View
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    books = Book.objects.all()
+    context = {
+        'message': 'Welcome Librarian! You can manage books.',
+        'books': books,
+    }
+    return render(request, 'relationship_app/librarian_view.html', context)
+
+
+# Member View
+@user_passes_test(is_member)
+def member_view(request):
+    books = Book.objects.all()
+    context = {
+        'message': 'Welcome Member! You can browse books.',
+        'books': books,
+    }
+    return render(request, 'relationship_app/member_view.html', context)
 
 
