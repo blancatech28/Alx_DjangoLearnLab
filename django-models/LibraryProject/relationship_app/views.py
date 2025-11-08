@@ -1,3 +1,9 @@
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib.auth import logout
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
@@ -27,10 +33,7 @@ class LibraryDetailView(DetailView):
 
 # relationship_app/views.py
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib import messages
+
 
 # Registration view
 def register_view(request):
