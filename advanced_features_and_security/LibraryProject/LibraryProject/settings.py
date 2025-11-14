@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%zr(@273i=qmob(^v-5#1!*79i8%kd_)=wy*bm=(s6yciybm$k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# Hosts allowed to serve this site
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
 
 
 # Application definition
@@ -50,7 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    'csp.middleware.CSPMiddleware',
+]   
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
@@ -131,3 +134,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'               # where unauthenticated users are sent
 LOGIN_REDIRECT_URL = '/books/'    # where to go after login
 LOGOUT_REDIRECT_URL = '/books/'   # where to go after logout
+
+
+# Extra browser protections
+SECURE_BROWSER_XSS_FILTER = True  # Helps prevent reflected XSS attacks
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Stops browsers from guessing file types
+
+X_FRAME_OPTIONS = 'DENY'  
+# Prevents your site from being loaded inside an iframe 
+# (protects against clickjacking)
+
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookie is only sent over HTTPS
+
+# Content Security Policy (CSP)
+CSP_DEFAULT_SRC = ("'self'",)      # Only allow content from your own domain
+CSP_SCRIPT_SRC = ("'self'",)       # Only scripts from your domain
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
+CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com')
+CSP_IMG_SRC = ("'self'", 'data:')  # Allow images from your domain and data URIs
