@@ -136,16 +136,6 @@ LOGIN_REDIRECT_URL = '/books/'    # where to go after login
 LOGOUT_REDIRECT_URL = '/books/'   # where to go after logout
 
 
-# Extra browser protections
-SECURE_BROWSER_XSS_FILTER = True  # Helps prevent reflected XSS attacks
-SECURE_CONTENT_TYPE_NOSNIFF = True  # Stops browsers from guessing file types
-
-X_FRAME_OPTIONS = 'DENY'  
-# Prevents your site from being loaded inside an iframe 
-# (protects against clickjacking)
-
-CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
-SESSION_COOKIE_SECURE = True  # Ensures session cookie is only sent over HTTPS
 
 # Content Security Policy (CSP)
 CSP_DEFAULT_SRC = ("'self'",)      # Only allow content from your own domain
@@ -153,3 +143,51 @@ CSP_SCRIPT_SRC = ("'self'",)       # Only scripts from your domain
 CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
 CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com')
 CSP_IMG_SRC = ("'self'", 'data:')  # Allow images from your domain and data URIs
+
+
+
+# ================================
+# SECURITY CONFIGURATION (HTTPS, COOKIES, HEADERS)
+# ================================
+
+# --- Force HTTPS ---
+SECURE_SSL_REDIRECT = True
+# Redirects all HTTP requests to HTTPS automatically.
+
+# --- HSTS (HTTP Strict Transport Security) ---
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+"""
+HSTS makes browsers remember to ONLY use HTTPS for your website.
+- INCLUDE_SUBDOMAINS means api.example.com, blog.example.com also force HTTPS.
+- PRELOAD allows the site to be added to browser preload lists.
+"""
+
+# --- Secure Cookies ---
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+"""
+These ensure cookies are *only* sent over HTTPS.
+Prevents session hijacking and CSRF token theft.
+"""
+
+# --- Secure HTTP Headers ---
+X_FRAME_OPTIONS = "DENY"
+# Prevents clickjacking attacks (site cannot load in an iframe).
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# Stops browsers from MIME-sniffing content types (prevents malicious file tricks).
+
+SECURE_BROWSER_XSS_FILTER = True
+# Enables browser’s built-in XSS protection.
+
+# --- Additional recommendations ---
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+"""
+These help Django correctly detect HTTPS when behind a reverse proxy
+(e.g., Nginx, Gunicorn, Render, AWS, etc.)
+"""
+# End of security configuration
+# ================================
