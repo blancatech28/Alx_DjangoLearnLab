@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Book
@@ -58,9 +57,16 @@ def book_delete(request, pk):
         return redirect('book_list')
     return render(request, 'bookshelf/book_confirm_delete.html', {'book': book})
 
-from django.views.generic import TemplateView
-class exampleView(TemplateView):
-    template_name = "bookshelf/form_example.html"
-    form_class = ExampleForm
 
+
+
+
+def example_form_view(request):
+    form = ExampleForm()
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # just for testing, do nothing
+            return render(request, 'bookshelf/form_example.html', {'form': form, 'success': True})
+    return render(request, 'bookshelf/form_example.html', {'form': form})
 # Create your views here.
