@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Book
-from .forms import BookForm,ExampleForm
+from .forms import BookForm
+from .forms import ExampleForm
 
 # Views are protected with permission_required decorators
 # Users must have the correct permission to access these views
@@ -56,5 +57,10 @@ def book_delete(request, pk):
         book.delete()
         return redirect('book_list')
     return render(request, 'bookshelf/book_confirm_delete.html', {'book': book})
+
+from django.views.generic import TemplateView
+class exampleView(TemplateView):
+    template_name = "bookshelf/form_example.html"
+    form_class = ExampleForm
 
 # Create your views here.
