@@ -27,7 +27,7 @@ class CustomPageNumberPagination(PageNumberPagination):
 # -----------------------------
 # List All Books
 # -----------------------------
-class BooklistView(ListAPIView):
+class ListView(ListAPIView):
     """
     API endpoint to list all books with support for:
     - Search by title or author's name
@@ -73,12 +73,29 @@ class BooklistView(ListAPIView):
             queryset = queryset.filter(publication_year__lte=max_year)
 
         return queryset
+    
+    
+class DetailView(ListAPIView):
+    """
+    API endpoint to retrieve details of a single Book by its ID.
+    - Open access (AllowAny)
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
 
+    def get_queryset(self):
+        """
+        Retrieve a single Book instance based on the 'id' URL parameter.
+        """
+        book_id = self.kwargs.get('id')
+        return self.queryset.filter(id=book_id)
 
 # -----------------------------
 # Create a New Book
 # -----------------------------
-class BookCreateView(CreateAPIView):
+class CreateView(CreateAPIView):
     """
     API endpoint to create a new Book record.
     - Only accessible to authenticated users
@@ -108,7 +125,7 @@ class BookCreateView(CreateAPIView):
 # -----------------------------
 # Update an Existing Book
 # -----------------------------
-class BookUpdateView(UpdateAPIView):
+class UpdateView(UpdateAPIView):
     """
     API endpoint to update an existing Book.
     - Only accessible to authenticated users
@@ -143,7 +160,7 @@ class BookUpdateView(UpdateAPIView):
 # -----------------------------
 # Delete a Book
 # -----------------------------
-class BookDeleteView(DestroyAPIView):
+class DeleteView(DestroyAPIView):
     """
     API endpoint to delete a Book.
     - Only accessible to authenticated users
