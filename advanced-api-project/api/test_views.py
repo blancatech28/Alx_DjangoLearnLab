@@ -17,7 +17,7 @@ class BookTest(APITestCase):
         self.user = User.objects.create_user(username='testuser', password='testpass')
 
     def authenticate(self):
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username='testuser', password='testpass')
     
     #  Test that initial book exists
     def test_books_created(self):
