@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .serializers import BookSerializer, AuthorSerializer
 from .models import Book, Author
+from django_filters import rest_framework 
 from rest_framework import generics, status, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
