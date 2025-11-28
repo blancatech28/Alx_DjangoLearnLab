@@ -3,7 +3,7 @@ from .serializers import BookSerializer, AuthorSerializer
 from .models import Book, Author
 from django_filters import rest_framework 
 from rest_framework import status, filters
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -77,7 +77,7 @@ class ListView(ListAPIView):
         return queryset
     
     
-class DetailView(ListAPIView):
+class DetailView(RetrieveAPIView):
     """
     API endpoint to retrieve details of a single Book by its ID.
     - Open access (AllowAny)
