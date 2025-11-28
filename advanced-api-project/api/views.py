@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-
+from rest_framework import generics
 
 # -----------------------------
 # Custom Pagination Class
