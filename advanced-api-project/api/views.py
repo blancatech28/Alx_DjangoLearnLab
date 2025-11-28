@@ -2,7 +2,8 @@ from django.shortcuts import render
 from .serializers import BookSerializer, AuthorSerializer
 from .models import Book, Author
 from django_filters import rest_framework 
-from rest_framework import generics, status, filters
+from rest_framework import status, filters
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -26,7 +27,7 @@ class CustomPageNumberPagination(PageNumberPagination):
 # -----------------------------
 # List All Books
 # -----------------------------
-class BooklistView(generics.ListAPIView):
+class BooklistView(ListAPIView):
     """
     API endpoint to list all books with support for:
     - Search by title or author's name
@@ -77,7 +78,7 @@ class BooklistView(generics.ListAPIView):
 # -----------------------------
 # Create a New Book
 # -----------------------------
-class BookCreateView(generics.CreateAPIView):
+class BookCreateView(CreateAPIView):
     """
     API endpoint to create a new Book record.
     - Only accessible to authenticated users
@@ -107,7 +108,7 @@ class BookCreateView(generics.CreateAPIView):
 # -----------------------------
 # Update an Existing Book
 # -----------------------------
-class BookUpdateView(generics.UpdateAPIView):
+class BookUpdateView(UpdateAPIView):
     """
     API endpoint to update an existing Book.
     - Only accessible to authenticated users
@@ -142,7 +143,7 @@ class BookUpdateView(generics.UpdateAPIView):
 # -----------------------------
 # Delete a Book
 # -----------------------------
-class BookDeleteView(generics.DestroyAPIView):
+class BookDeleteView(DestroyAPIView):
     """
     API endpoint to delete a Book.
     - Only accessible to authenticated users
