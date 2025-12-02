@@ -8,7 +8,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200,null=False,blank=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='posts')
     content = models.TextField()
-    Published_date = models.DateTimeField(auto_now_add=True)
+    published_date = models.DateTimeField(auto_now_add=True)
   
 
 class CustomUserManager(BaseUserManager):
