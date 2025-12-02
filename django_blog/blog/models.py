@@ -1,7 +1,15 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
+from django.contrib.auth.models import User
 
+
+class Post(models.Model):
+    title = models.CharField(max_length=200,null=False,blank=False)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='posts')
+    content = models.TextField()
+    Published_date = models.DateTimeField(auto_now_add=True)
+  
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -43,12 +51,7 @@ class CustomUser(AbstractBaseUser):
 
 
 
-class Post(models.Model):
-    title = models.CharField(max_length=200,null=False,blank=False)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='posts')
-    content = models.TextField()
-    Published_date = models.DateTimeField(auto_now_add=True)
-  
+
 
 
 # Create your models here.
