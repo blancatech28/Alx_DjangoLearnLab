@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+from decouple import config
 
 from pathlib import Path
 
@@ -76,9 +77,9 @@ WSGI_APPLICATION = 'django_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': BASE_DIR / 'db.mysql',
-        'USER': 'your_mysql_user',
-        'PASSWORD': 'your_mysql_password',
+        'NAME': 'blog_db',
+        'USER': 'blog_user',
+        'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '3306',
     }
