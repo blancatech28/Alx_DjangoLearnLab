@@ -3,16 +3,15 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 from django.contrib.auth.models import User
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
-class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
 
 class Post(models.Model):
     title = models.CharField(max_length=200,null=False,blank=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='posts')
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField('Tag', blank=True, related_name='posts')
+    tags = TaggableManager()
 
     def __str__(self):
         return self.title

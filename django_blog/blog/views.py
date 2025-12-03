@@ -158,7 +158,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 from django.views.generic import ListView
 from django.db.models import Q
-from .models import Post, Tag
+from .models import Post
 from .forms import SearchForm
 
 # Search View
