@@ -1,8 +1,19 @@
-# 📘 Accounts App – README
+# 📘 Social Media API – README
 
-This **Accounts** app handles user authentication and profile management for my social media API. It is built with **Django REST Framework** and uses **Token Authentication** for secure access to protected endpoints. The database used is the default **SQLite** for development.
+This **Social Media API** is built with **Django REST Framework** and provides functionality for user authentication, posts, comments, and more. It uses **Token Authentication** for secure access to protected endpoints. The default database for development is **SQLite**.
 
 ---
+
+## 🟢 Apps Overview
+
+1. **Accounts App** – Handles user authentication and profile management.
+2. **Posts App** – Allows users to create, view, update, delete posts and comments, with search and pagination.
+
+---
+
+# 📘 Accounts App
+
+This app handles user authentication and profile management.
 
 ## 🚀 Features
 
@@ -11,66 +22,39 @@ This **Accounts** app handles user authentication and profile management for my 
 * Implemented using `CreateAPIView`
 * Validates incoming user data
 * Creates a new user account
-* Endpoint:
-  **POST** `/account/register/`
-
----
+* **Endpoint:** `POST /account/register/`
 
 ### **2. User Login**
 
 * Custom login flow using `APIView`
+* Uses a dedicated `LoginSerializer` for username/password validation
+* Generates or retrieves an existing token:
 
-* Uses a dedicated LoginSerializer for username/password validation
+```python
+Token.objects.get_or_create(user=user)
+```
 
-* Generates or retrieves an existing token using:
-
-  ```python
-  Token.objects.get_or_create(user=user)
-  ```
-
-* Returns the token so the frontend can authenticate future requests
-
-* Endpoint:
-  **POST** `/account/login/`
-
----
+* Returns the token for authenticated requests
+* **Endpoint:** `POST /account/login/`
 
 ### **3. User Profile**
 
 * Implemented using `RetrieveUpdateAPIView`
-* Allows the user to:
+* Allows users to fetch or update their profile
+* **Endpoints:**
+  `GET /account/profile/`
+  `PUT /account/profile/` (or PATCH)
 
-  * Fetch their profile
-  * Update profile details
-* Authentication required using token in headers
-* Endpoint:
-  **GET /account/profile/**
-  **PUT /account/profile/** (or PATCH)
+### 🔐 Authentication
 
----
-
-## 🔐 Authentication
-
-This app uses **DRF Token Authentication**.
-
-Clients must send the token from login in the request header:
+* Uses **DRF Token Authentication**
+* Clients must include in request headers:
 
 ```
 Authorization: Token <your_token_here>
 ```
 
----
-
-## 🗂️ Tech Stack
-
-* **Django**
-* **Django REST Framework**
-* **Token Authentication**
-* **SQLite** (default development database)
-
----
-
-## 📦 Directory Overview
+### 🗂️ Directory Overview
 
 ```
 accounts/
@@ -83,13 +67,74 @@ accounts/
 
 ---
 
-## ✅ Summary
+# 📘 Posts App
 
-This accounts app provides a clean and simple authentication system using DRF.
-It supports:
+This app allows users to create posts and comments, with full CRUD functionality, search, and pagination.
 
-* registering new users
-* logging in and receiving a token
-* retrieving and updating user profile data
+## 🚀 Features
 
-Everything is kept lightweight and straightforward, making it easy to extend later.
+### **1. Posts**
+
+* Users can **create, view, update, and delete posts**
+* Each post includes:
+
+  * `author` – the user who created it
+  * `title` – title of the post
+  * `content` – text content
+  * `created_at` and `updated_at` timestamps
+* Only the **author** can edit or delete their own posts
+* Supports **searching** posts by `title` or `content`
+* **Endpoint Examples:**
+
+  * `GET /post/posts/` – List all posts (paginated)
+  * `POST /post/posts/` – Create a new post (authenticated)
+  * `GET /post/posts/{id}/` – Retrieve a single post
+  * `PUT /post/posts/{id}/` – Update post (author only)
+  * `DELETE /post/posts/{id}/` – Delete post (author only)
+
+### **2. Comments**
+
+* Users can **create, view, update, and delete comments** on posts
+* Each comment includes:
+
+  * `post` – the related post
+  * `author` – the user who commented
+  * `content` – text content
+  * `created_at` and `updated_at` timestamps
+* Only the **author** can edit or delete their own comments
+* **Endpoint Examples:**
+
+  * `GET /post/comments/` – List all comments
+  * `POST /post/comments/` – Create a comment
+  * `GET /post/comments/{id}/` – Retrieve a comment
+  * `PUT /post/comments/{id}/` – Update comment (author only)
+  * `DELETE /post/comments/{id}/` – Delete comment (author only)
+
+### 🔄 Pagination & Search
+
+* Pagination is applied to post listings (default page size: 10)
+* Search via query parameters, e.g.,
+  `GET /post/posts/?search=keyword`
+
+### 🗂️ Directory Overview
+
+```
+posts/
+│
+├── serializers.py      # PostSerializer + CommentSerializer
+├── views.py            # PostViewSet + CommentViewSet
+├── urls.py             # /posts and /comments endpoints
+├── permissions.py      # IsAuthorOrReadOnly custom permission
+└── models.py           # Post + Comment models
+```
+
+---
+
+## 🗝️ Summary
+
+This Social Media API provides:
+
+* **Accounts App** – user registration, login, and profile management
+* **Posts App** – posts and comments with CRUD, author-only permissions, search, and pagination
+
+Everything is structured for scalability and ease of extension. Future apps like **follows, fe
