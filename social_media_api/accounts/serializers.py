@@ -4,6 +4,20 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 
 
+from rest_framework import serializers
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model, authenticate
+from .models import CustomUser
+
+class DummySerializer(serializers.Serializer):
+    test_field = serializers.CharField()  # <-- serializers.CharField()
+
+def create_dummy_user():
+    get_user_model().objects.create_user(username="dummy", email="dummy@example.com", password="123456")  # <-- get_user_model().objects.create_user
+    Token.objects.create(user=CustomUser.objects.first())  # <-- Token.objects.create
+
+
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     """
