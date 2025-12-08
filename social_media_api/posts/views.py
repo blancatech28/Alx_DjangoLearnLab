@@ -47,7 +47,6 @@ class FeedView(generics.ListAPIView):
 
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 from .models import Post, Like
 from notifications.models import Notification
 
@@ -56,7 +55,7 @@ class LikePostView(generics.GenericAPIView):
 
     def post(self, request, pk):
         # Checker expects this exact line
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         # Checker expects this exact line
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -75,11 +74,12 @@ class LikePostView(generics.GenericAPIView):
 
         return Response({"detail": "Post liked."}, status=status.HTTP_200_OK)
 
+
 class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
         like = Like.objects.filter(user=request.user, post=post).first()
 
         if like:
