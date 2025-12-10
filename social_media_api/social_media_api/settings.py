@@ -10,6 +10,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEBUG = False
+
 # SECURITY: Use environment variables for secret key and debug
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'replace-me-with-a-secure-key')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
